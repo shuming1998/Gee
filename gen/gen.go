@@ -14,7 +14,7 @@ import (
 )
 
 // 定义 gen 使用的请求处理函数，用户借此来定义路由映射的处理方法
-type HandlerFunc func(*context)
+type HandlerFunc func(*Context)
 
 // Engine 用于实现 ServeHTTP 接口
 type Engine struct {
