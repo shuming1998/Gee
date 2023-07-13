@@ -1,27 +1,35 @@
-package gee
+/*
+ * @Author: cuishuming@baidu.com
+ * @Date: 2023-07-13 15:31:52
+ * @LastEditors: cuishuming@baidu.com
+ * @LastEditTime: 2023-07-13 16:36:57
+ * @FilePath: /baidu/Gen/gen/gen.go
+ * @Description:
+ * Copyright (c) 2023 by ${cuishuming@baidu.com}, All Rights Reserved. 
+ */
+package gen
 
 import (
 	"fmt"
 	"net/http"
 )
 
-// 定义 gee 使用的请求处理函数，用户借此来定义路由映射的处理方法
+// 定义 gen 使用的请求处理函数，用户借此来定义路由映射的处理方法
 type HandlerFunc func(http.ResponseWriter, *http.Request)
 
 // Engine 用于实现 ServeHTTP 接口
 type Engine struct {
 	// 路由映射表，根据不同的路由映射不同的处理方法
-	router map[string]HandlerFunc
+	router *router
 }
 
-// 构造返回 gee.Engine 实例
+// 构造返回 gen.Engine 实例
 func New() *Engine {
-	return &Engine{router: make(map[string]HandlerFunc)}
+	return &Engine{router: newRouter()}
 }
 
 func (engine *Engine) addRoute(method string, pattern string, handler HandlerFunc) {
-	key := method + "-" + pattern
-	engine.router[key] = handler
+	engine.router.addRoute(method, pattern, handler)
 }
 
 // 用于增加 GET 请求
@@ -42,11 +50,7 @@ func (engine *Engine) Run(addr string) (err error) {
 // ResponseWriter 可以构造针对该请求的响应
 // Request 包含了该 HTTP 请求的所有的信息，比如请求地址、Header和Body等信息
 func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	key := req.Method + "-" + req.URL.Path
-	if handler, ok := engine.router[key]; ok {
-		handler(w, req)
-	} else {
-		fmt.Fprintf(w, "404 NOT FOUND: %s\n", req.URL)
-	}
+	c := newContext(w, req)
+	engine.router.handle(c)
 }
 
