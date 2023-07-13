@@ -2,20 +2,19 @@
  * @Author: cuishuming@baidu.com
  * @Date: 2023-07-13 15:31:52
  * @LastEditors: cuishuming@baidu.com
- * @LastEditTime: 2023-07-13 16:50:58
+ * @LastEditTime: 2023-07-13 16:59:28
  * @FilePath: /baidu/Gen/gen/gen.go
  * @Description:
- * Copyright (c) 2023 by ${cuishuming@baidu.com}, All Rights Reserved. 
+ * Copyright (c) 2023 by ${cuishuming@baidu.com}, All Rights Reserved.
  */
 package gen
 
 import (
-	"fmt"
 	"net/http"
 )
 
 // 定义 gen 使用的请求处理函数，用户借此来定义路由映射的处理方法
-type HandlerFunc func(http.ResponseWriter, *http.Request)
+type HandlerFunc func(*context)
 
 // Engine 用于实现 ServeHTTP 接口
 type Engine struct {
@@ -53,4 +52,3 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	c := newContext(w, req)
 	engine.router.handle(c)
 }
-
