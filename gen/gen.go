@@ -1,11 +1,11 @@
-package gee
+package gen
 
 import (
 	"fmt"
 	"net/http"
 )
 
-// 定义 gee 使用的请求处理函数，用户借此来定义路由映射的处理方法
+// 定义 gen 使用的请求处理函数，用户借此来定义路由映射的处理方法
 type HandlerFunc func(http.ResponseWriter, *http.Request)
 
 // Engine 用于实现 ServeHTTP 接口
@@ -14,7 +14,7 @@ type Engine struct {
 	router map[string]HandlerFunc
 }
 
-// 构造返回 gee.Engine 实例
+// 构造返回 gen.Engine 实例
 func New() *Engine {
 	return &Engine{router: make(map[string]HandlerFunc)}
 }
